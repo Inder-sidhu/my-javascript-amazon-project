@@ -64,7 +64,7 @@ function updateCartQuantity() {
         cartQuantity += cartItem.quantity;
     });
     document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
-    quantitySelector.value = "1";
+    // quantitySelector.value = "1";
 }
 
 document.querySelectorAll('.js-add-to-cart')
