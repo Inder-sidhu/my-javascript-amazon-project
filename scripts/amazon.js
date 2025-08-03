@@ -68,6 +68,8 @@ function updateCartQuantity() {
     // quantitySelector.value = "1";
 }
 
+updateCartQuantity();
+
 document.querySelectorAll('.js-add-to-cart')
     .forEach((button) => {
         button.addEventListener('click', () => {
