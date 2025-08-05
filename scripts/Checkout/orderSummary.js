@@ -8,20 +8,20 @@ import { renderCheckoutHeader } from './checkoutHeader.js';
 
 export function renderOrderSummary() {
 
-    let cartSummaryHTML = '';
+  let cartSummaryHTML = '';
 
-    cart.forEach((cartItem) => {
-        const productId = cartItem.productId;
+  cart.forEach((cartItem) => {
+    const productId = cartItem.productId;
 
-        const matchingProduct = getProduct(productId);
+    const matchingProduct = getProduct(productId);
 
-        const deliveryOptionId = String(cartItem.deliveryOptionId);
+    const deliveryOptionId = String(cartItem.deliveryOptionId);
 
-        const deliveryOption = getDeliveryOption(deliveryOptionId);
+    const deliveryOption = getDeliveryOption(deliveryOptionId);
 
-        const dateString = calculateDeliveryDate(deliveryOption);
+    const dateString = calculateDeliveryDate(deliveryOption);
 
-        cartSummaryHTML += `
+    cartSummaryHTML += `
   <div class="cart-item-container
    js-cart-item-container-${matchingProduct.id}">
     <div class="delivery-date">
@@ -37,7 +37,7 @@ export function renderOrderSummary() {
                   ${matchingProduct.name}
           </div>
             <div class="product-price">
-                  $${formatCurrency(matchingProduct.priceCents)} 
+                  ${matchingProduct.getPrice()}
             </div>
             <div class="product-quantity">
                   <span>
@@ -67,21 +67,21 @@ export function renderOrderSummary() {
     </div>
   </div>
           `;
-    });
+  });
 
-    function deliveryOptionHTML(matchingProduct, cartItem) {
+  function deliveryOptionHTML(matchingProduct, cartItem) {
 
-        let html = '';
+    let html = '';
 
-        deliveryOptions.forEach((deliveryOption) => {
+    deliveryOptions.forEach((deliveryOption) => {
 
-            const dateString = calculateDeliveryDate(deliveryOption);
+      const dateString = calculateDeliveryDate(deliveryOption);
 
-            const priceString = deliveryOption.priceCents === 0 ? 'FREE' : `$${formatCurrency(deliveryOption.priceCents)} -`
+      const priceString = deliveryOption.priceCents === 0 ? 'FREE' : `$${formatCurrency(deliveryOption.priceCents)} -`
 
-            const isChecked = deliveryOption.id === cartItem.deliveryOptionId;
+      const isChecked = deliveryOption.id === cartItem.deliveryOptionId;
 
-            html += `<div class="delivery-option js-delivery-option"
+      html += `<div class="delivery-option js-delivery-option"
     data-product-id="${matchingProduct.id}"
     data-delivery-option-id="${deliveryOption.id}">
                   <input type="radio"
@@ -97,37 +97,38 @@ export function renderOrderSummary() {
                     </div>
                   </div>
                 </div>`
-        });
-        return html;
-    }
+    });
+    return html;
+  }
 
-    document.querySelector('.js-order-summary')
-        .innerHTML = cartSummaryHTML;
+  document.querySelector('.js-order-summary')
+    .innerHTML = cartSummaryHTML;
 
-    document.querySelectorAll('.js-delete-link')
-        .forEach((link) => {
-            link.addEventListener('click', () => {
-                const productId = link.dataset.productId;
-                removeFromCart(productId);
+  document.querySelectorAll('.js-delete-link')
+    .forEach((link) => {
+      link.addEventListener('click', () => {
+        const productId = link.dataset.productId;
+        removeFromCart(productId);
 
-                renderOrderSummary();
-                renderPaymentSummary();
-            });
-        });
+        renderCheckoutHeader();
+        renderOrderSummary();
+        renderPaymentSummary();
+      });
+    });
 
-    document.querySelectorAll('.js-delivery-option')
-        .forEach((element) => {
-            element.addEventListener('click', () => {
-                const { productId, deliveryOptionId } = element.dataset;
-                updateDeliveryOption(productId, deliveryOptionId);
+  document.querySelectorAll('.js-delivery-option')
+    .forEach((element) => {
+      element.addEventListener('click', () => {
+        const { productId, deliveryOptionId } = element.dataset;
+        updateDeliveryOption(productId, deliveryOptionId);
 
-                renderCheckoutHeader();
-                renderOrderSummary();
-                renderPaymentSummary();
-            });
-        });
+        renderCheckoutHeader();
+        renderOrderSummary();
+        renderPaymentSummary();
+      });
+    });
 
-     document.querySelectorAll('.js-update-link')
+  document.querySelectorAll('.js-update-link')
     .forEach((link) => {
       link.addEventListener('click', () => {
         const productId = link.dataset.productId;
@@ -158,6 +159,6 @@ export function renderOrderSummary() {
         renderCheckoutHeader();
         renderOrderSummary();
         renderPaymentSummary();
-            });
-        });
+      });
+    });
 };
